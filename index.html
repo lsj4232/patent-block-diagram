@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>특허 블록도 에디터</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="toolbar">
+    <button id="btn-box">박스</button>
+    <button id="btn-round">둥근 박스</button>
+    <button id="btn-diamond">마름모</button>
+    <button id="btn-cyl">원기둥</button>
+    <span class="sep"></span>
+    <button id="btn-arrow">화살표 연결</button>
+    <button id="btn-tag">부호 태그</button>
+    <button id="btn-style">직선 ⇄ 직각</button>
+    <span class="sep"></span>
+    <textarea id="edit-text" rows="2" placeholder="박스를 선택하면 여기서 텍스트 편집" disabled></textarea>
+    <span class="sep"></span>
+    <button id="btn-del">삭제</button>
+    <span class="sep"></span>
+    <button id="btn-open">열기</button>
+    <button id="btn-save">저장</button>
+    <button id="btn-png">PNG 내보내기</button>
+    <span id="hint">박스 선택 → 위 입력창에서 텍스트 편집 (더블클릭도 가능) &nbsp;|&nbsp; 빈 곳 더블클릭: 박스 생성 &nbsp;|&nbsp; Delete: 삭제 &nbsp;|&nbsp; ⌘/Ctrl+Z: 실행 취소</span>
+  </div>
+  <div id="scroll">
+    <div id="wrap">
+      <svg id="canvas" width="2400" height="1600"></svg>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
