@@ -406,6 +406,39 @@ function deleteSelection() {
   render()
 }
 
+// ---------- 복사 / 붙여넣기 ----------
+
+let clipboard = null   // { type: 'box'|'tag', data, count }
+
+function copySelection() {
+  if (!selection) return
+  if (selection.type === 'box') {
+    const b = boxById(selection.id)
+    if (b) clipboard = { type: 'box', data: JSON.parse(JSON.stringify(b)), count: 0 }
+  } else if (selection.type === 'tag') {
+    const t = state.tags.find(t => t.id === selection.id)
+    if (t) clipboard = { type: 'tag', data: JSON.parse(JSON.stringify(t)), count: 0 }
+  }
+}
+
+function pasteClipboard() {
+  if (!clipboard) return
+  if (clipboard.type === 'tag' && !boxById(clipboard.data.boxId)) return
+  pushUndo()
+  clipboard.count++
+  const off = 20 * clipboard.count
+  if (clipboard.type === 'box') {
+    const b = { ...clipboard.data, id: uid(), x: clipboard.data.x + off, y: clipboard.data.y + off }
+    state.boxes.push(b)
+    selection = { type: 'box', id: b.id }
+  } else {
+    const t = { ...clipboard.data, id: uid(), dx: clipboard.data.dx + off, dy: clipboard.data.dy + off, label: nextLabel() }
+    state.tags.push(t)
+    selection = { type: 'tag', id: t.id }
+  }
+  render()
+}
+
 // ---------- 저장 / 열기 / 내보내기 ----------
 
 async function save() {
@@ -503,6 +536,8 @@ window.addEventListener('keydown', e => {
   if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return
   if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelection() }
   else if ((e.metaKey || e.ctrlKey) && e.key === 'z') { e.preventDefault(); undo() }
+  else if ((e.metaKey || e.ctrlKey) && e.key === 'c') { e.preventDefault(); copySelection() }
+  else if ((e.metaKey || e.ctrlKey) && e.key === 'v') { e.preventDefault(); pasteClipboard() }
   else if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); save() }
   else if (e.key === 'Escape') { arrowMode = false; arrowSource = null; selection = null; render() }
 })
