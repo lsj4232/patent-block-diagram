@@ -76,6 +76,30 @@ html, body {
   position: relative;
   width: 2400px;
   height: 1600px;
+  zoom: 1;              /* Ctrl+휠 확대/축소 (레이아웃까지 스케일되어 스크롤이 맞게 늘어남) */
+}
+
+#zoom-label {
+  font-size: 12px;
+  color: #666;
+  min-width: 44px;
+  text-align: right;
+  user-select: none;
+}
+
+#fs-label {
+  font-size: 12px;
+  color: #666;
+  min-width: 32px;
+  text-align: center;
+  user-select: none;
+}
+
+#sel-label {
+  font-size: 12px;
+  color: #2b7de9;
+  min-width: 56px;
+  user-select: none;
 }
 
 #canvas {
@@ -86,6 +110,7 @@ html, body {
 
 #canvas g.el { cursor: move; }
 #canvas [data-type="resize"] { cursor: nwse-resize; }
+#canvas [data-type="ep"] { cursor: crosshair; }
 #canvas text { user-select: none; }
 
 .overlay-edit {
