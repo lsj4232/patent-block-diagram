@@ -102,6 +102,25 @@ html, body {
   user-select: none;
 }
 
+#msg {
+  font-size: 12px;
+  color: #c26a00;
+  white-space: nowrap;
+  user-select: none;
+}
+
+#tol {
+  font-family: var(--font-gothic);
+  font-size: 13px;
+  width: 56px;
+  padding: 5px 4px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  outline: none;
+}
+
+#tol:focus { border-color: #2b7de9; }
+
 #canvas {
   display: block;
   background: white;
@@ -109,8 +128,12 @@ html, body {
 }
 
 #canvas g.el { cursor: move; }
+/* 투명색 지정 모드에서는 어디를 눌러도 색을 찍는 동작이므로 커서를 스포이드처럼 바꾼다 */
+body.pick #canvas, body.pick #canvas g.el { cursor: crosshair; }
 #canvas [data-type="resize"] { cursor: nwse-resize; }
 #canvas [data-type="ep"] { cursor: crosshair; }
+#canvas [data-type="bend"][data-axis="x"] { cursor: ew-resize; }
+#canvas [data-type="bend"][data-axis="y"] { cursor: ns-resize; }
 #canvas text { user-select: none; }
 
 .overlay-edit {

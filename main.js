@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, clipboard } = require('electron')
 const fs = require('fs')
 const path = require('path')
 
@@ -109,6 +109,26 @@ ipcMain.handle('load-json', async () => {
   currentPath = filePaths[0]
   setTitle()
   return fs.readFileSync(currentPath, 'utf-8')
+})
+
+// 도면에 넣을 이미지 파일을 골라 data URL 로 돌려준다 (도면 파일에 그대로 실려 이식성이 유지된다)
+const IMAGE_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+const IMAGE_MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', bmp: 'image/bmp', webp: 'image/webp' }
+
+ipcMain.handle('load-image', async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    filters: [{ name: '이미지', extensions: IMAGE_EXTS }],
+    properties: ['openFile']
+  })
+  if (canceled || !filePaths[0]) return null
+  const ext = path.extname(filePaths[0]).slice(1).toLowerCase()
+  return `data:${IMAGE_MIME[ext] || 'image/png'};base64,` + fs.readFileSync(filePaths[0]).toString('base64')
+})
+
+// 시스템 클립보드에 그림이 있으면 data URL 로 (화면 캡처를 바로 붙여넣기 위한 경로)
+ipcMain.handle('clipboard-image', async () => {
+  const img = clipboard.readImage()
+  return img.isEmpty() ? null : img.toDataURL()
 })
 
 ipcMain.handle('export-png', async (e, dataURL) => {
